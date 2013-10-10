@@ -20,8 +20,8 @@ class Organism:
                         c.genome[i] = 88
                 else:
                     c.genome[i] -= int(random.uniform(0,10))
-                    if c.genome[i] < 1:
-                        c.genome[i] = 1
+                    if c.genome[i] < 0:
+                        c.genome[i] = 0
         return c
     
     def crossover(self,organism):
