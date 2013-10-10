@@ -16,8 +16,12 @@ class Organism:
             if random.random() < 0.1:
                 if random.random() < 0.5:
                     c.genome[i] += int(random.uniform(0,10))
+                    if c.genome[i] > 88:
+                        c.genome[i] = 88
                 else:
                     c.genome[i] -= int(random.uniform(0,10))
+                    if c.genome[i] < 1:
+                        c.genome[i] = 1
         return c
     
     def crossover(self,organism):

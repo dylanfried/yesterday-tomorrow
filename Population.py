@@ -6,6 +6,7 @@ class Population:
     number_of_organisms = 0
     start_melody = None
     end_melody = None
+    number_of_generations = 0
     
     def __init__(self,number_of_organisms,start_melody,end_melody):
         self.number_of_organisms = number_of_organisms
@@ -14,15 +15,17 @@ class Population:
         
         for i in range(self.number_of_organisms):
             self.population.append(Organism(start_melody))
-            self.population[-1].calculate_fitness(end_melody)
+        
+        self.calculate_fitness()
     
     def generation(self):
         ''' Move forward one generation '''
+        self.number_of_generations += 1
+        
         new_population = []
         
         # Keep some
         sampled = self.sample(int(self.number_of_organisms/5))
-        print self.number_of_organisms, int(self.number_of_organisms/5), sampled
         new_population += [s.copy() for s in sampled]
         
         # Keep some with mutations
