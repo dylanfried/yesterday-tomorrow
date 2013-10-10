@@ -9,19 +9,19 @@ class Organism:
         if genome:
             self.genome = deepcopy(genome)
     
-    def mutate(self):
+    def mutate(self,gene_range,mutate_max):
         ''' Return a mutated organism '''
         c = self.copy()
         for i in range(len(c.genome)):
             if random.random() < 0.1:
                 if random.random() < 0.5:
-                    c.genome[i] += int(random.uniform(0,10))
-                    if c.genome[i] > 88:
-                        c.genome[i] = 88
+                    c.genome[i] += int(random.uniform(0,mutate_max))
+                    if c.genome[i] > gene_range[1]:
+                        c.genome[i] = gene_range[1]
                 else:
-                    c.genome[i] -= int(random.uniform(0,10))
-                    if c.genome[i] < 0:
-                        c.genome[i] = 0
+                    c.genome[i] -= int(random.uniform(0,mutate_max))
+                    if c.genome[i] < gene_range[0]:
+                        c.genome[i] = gene_range[0]
         return c
     
     def crossover(self,organism):

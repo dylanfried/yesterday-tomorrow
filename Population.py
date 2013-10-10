@@ -2,16 +2,17 @@ import random
 from Organism import Organism
 
 class Population:
-    population = []
-    number_of_organisms = 0
-    start_melody = None
-    end_melody = None
-    number_of_generations = 0
     
-    def __init__(self,number_of_organisms,start_melody,end_melody):
+    def __init__(self,number_of_organisms,start_melody,end_melody,gene_range=(0,88),mutate_max=10):
         self.number_of_organisms = number_of_organisms
         self.start_melody = start_melody
         self.end_melody = end_melody
+        
+        self.gene_range = gene_range
+        self.mutate_max = mutate_max
+        
+        self.population = []
+        self.number_of_generations = 0
         
         for i in range(self.number_of_organisms):
             self.population.append(Organism(start_melody))
@@ -30,7 +31,7 @@ class Population:
         
         # Keep some with mutations
         sampled = self.sample(int(self.number_of_organisms/4))
-        new_population += [s.mutate() for s in sampled]
+        new_population += [s.mutate(self.gene_range,self.mutate_max) for s in sampled]
         
         # Keep some with crossover
         for i in range(int(self.number_of_organisms/4)):

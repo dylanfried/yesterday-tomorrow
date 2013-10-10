@@ -4,10 +4,17 @@ class WAVWriter:
     keys_s = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
     def __init__(self):
         pass
-    def write(self, melody,title):
+    def write(self, melody,title,times=None):
         abc_notation = []
-        for note in melody:
-            abc_notation.append((self.number_to_abc(note),4))
+        for i in range(len(melody)):
+            note = melody[i]
+            if times:
+                note_time = times[i]
+                if note_time == 0:
+                    note_time = 4
+            else:
+                note_time = 4
+            abc_notation.append((self.number_to_abc(note),note_time))
         pysynth.make_wav(abc_notation,fn=title)
     def number_to_abc(self,number):
         if number == 0:
