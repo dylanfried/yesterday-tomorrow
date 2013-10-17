@@ -3,13 +3,15 @@ from Organism import Organism
 
 class Population:
     
-    def __init__(self,number_of_organisms,start_melody,end_melody,gene_range=(0,88),mutate_max=10):
+    def __init__(self,number_of_organisms,start_melody,end_melody,gene_range=(0,88),mutate_max=10,test=False):
         self.number_of_organisms = number_of_organisms
         self.start_melody = start_melody
         self.end_melody = end_melody
         
         self.gene_range = gene_range
         self.mutate_max = mutate_max
+        
+        self.div_by_two = test
         
         self.population = []
         self.number_of_generations = 0
@@ -49,7 +51,7 @@ class Population:
     
     def calculate_fitness(self):
         for organism in self.population:
-            organism.calculate_fitness(self.end_melody)
+            organism.calculate_fitness(self.end_melody,self.div_by_two)
     
     def most_fit(self):
         ''' Return the highest fitness '''

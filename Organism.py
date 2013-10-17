@@ -32,11 +32,14 @@ class Organism:
                 c.genome[i] = organism.genome[i]
         return c
     
-    def calculate_fitness(self,target):
+    def calculate_fitness(self,target,div_by_two=False):
         ''' Calculate the fitness of this organism '''
         f = 0
         for i in range(len(self.genome)):
-            f += (self.genome[i] - target[i])**2
+            if div_by_two:
+                f += (self.genome[i]/2 - target[i]/2)**2
+            else:
+                f += (self.genome[i] - target[i])**2
         self.fitness = f
     
     def copy(self):
