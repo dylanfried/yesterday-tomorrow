@@ -10,7 +10,7 @@ yesterday   = [47,45,45,0,49,51,53,54,56,57,56,54,54,0,54,54,52,50,49,47,50,49,4
 yesterday_time = [8,8,-2,4,8,8,8,8,8,8,-8,16,-2,4,8,8,8,8,8,8,4,8,-4]
 
 p_melody = Population(1000,yesterday,tomorrow,(0,88),10)
-p_time = Population(1000,yesterday_time,tomorrow_time,(-32,32),4,test=True)
+p_time = Population(1000,yesterday_time,tomorrow_time,(-32,32),4)
 
 w = WAVWriter()
 w.write(p_melody.best(1)[0].genome,"output/initial.wav",p_time.best(1)[0].genome)
