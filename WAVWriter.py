@@ -7,14 +7,19 @@ class WAVWriter:
     def write(self, melody,title,times=None):
         abc_notation = []
         for i in range(len(melody)):
-            note = melody[i]
-            if times:
-                note_time = times[i]
-                if note_time == 0:
-                    note_time = 4
+            if isinstance(melody[i],tuple):
+                note = melody[i][0]
+                note_time = melody[i][1]
             else:
-                note_time = 4
+                note = melody[i]
+                if times:
+                    note_time = times[i]
+                    if note_time == 0:
+                        note_time = 4
+                else:
+                    note_time = 4
             abc_notation.append((self.number_to_abc(note),note_time))
+        print "ABC to write:",abc_notation
         pysynth.make_wav(abc_notation,fn=title)
     def number_to_abc(self,number):
         if number == 0:

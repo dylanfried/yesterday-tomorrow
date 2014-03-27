@@ -1,5 +1,5 @@
 import random
-from Organism import Organism
+from OperationOrganism import OperationOrganism
 
 class Population:
     
@@ -15,37 +15,57 @@ class Population:
         self.number_of_generations = 0
         
         for i in range(self.number_of_organisms):
-            self.population.append(Organism(start_melody))
+            self.population.append(OperationOrganism(start_melody))
         
         self.calculate_fitness()
     
     def generation(self):
         ''' Move forward one generation '''
-        self.number_of_generations += 1
-        
-        new_population = []
-        
-        # Keep some
-        sampled = self.sample(int(self.number_of_organisms/5))
-        new_population += [s.copy() for s in sampled]
-        
-        # Keep some with mutations
-        sampled = self.sample(int(self.number_of_organisms/4))
-        new_population += [s.mutate(self.gene_range,self.mutate_max) for s in sampled]
-        
-        # Keep some with crossover
-        for i in range(int(self.number_of_organisms/4)):
-            sampled = self.sample(2)
-            new_population.append(sampled[0].crossover(sampled[1]))
-        
-        # Fill out the rest with random new organisms
-        for i in range(self.number_of_organisms-len(new_population)):
-            new_population.append(Organism(self.start_melody))
-        
-        self.population = new_population
-        
-        # Calculate fitness
-        self.calculate_fitness()
+        try:                                             
+            new_population = []
+            
+            # Keep copies of the best
+            #b = self.best(1)[0]
+            #new_population += [b.copy() for i in range(int(self.number_of_organisms*0.01))]
+            
+            sampled = self.sample(self.number_of_organisms)
+            
+            random.shuffle(sampled)
+            
+            for i in range(0,len(sampled),2):
+                m1 = sampled[i].mutate(self.gene_range,self.mutate_max)
+                m2 = sampled[i+1].mutate(self.gene_range,self.mutate_max)
+                if random.random() > 0.5:
+                    new_population += m1.onepointcrossover(m2)
+                else:
+                    new_population.append(m1)
+                    new_population.append(m2)
+            
+            ## Keep some
+            #sampled = self.sample(int(self.number_of_organisms*0.2))
+            #new_population += [s.copy() for s in sampled]
+            #
+            ## Keep some with mutations
+            #sampled = self.sample(int(self.number_of_organisms*0.3))
+            #new_population += [s.mutate(self.gene_range,self.mutate_max) for s in sampled]
+            #
+            ## Keep some with crossover
+            #for i in range(int(self.number_of_organisms*0.35)):
+            #    sampled = self.sample(2)
+            #    new_population.append(sampled[0].crossover(sampled[1]))
+            #
+            ## Fill out the rest with random new organisms
+            #for i in range(self.number_of_organisms-len(new_population)):
+            #    new_population.append(OperationOrganism(self.start_melody))
+            
+            self.population = new_population
+            self.number_of_generations += 1
+            # Calculate fitness
+            self.calculate_fitness()
+        except KeyboardInterrupt:
+            print "Caught keyboard interrupt"
+            self.calculate_fitness()
+            raise
     
     def calculate_fitness(self):
         for organism in self.population:
@@ -64,8 +84,15 @@ class Population:
         ''' Sample n organisms from the population, with the fitness acting as a weight '''
         container = []
         for i in range(n):
-            container.append(self.weighted_choice())
+            container.append(self.tournament_choice())
         return container
+
+    def tournament_choice(self,k=2):
+        organisms = random.sample(self.population,2)
+        if organisms[0].fitness > organisms[1].fitness:
+            return organisms[1]
+        else:
+            return organisms[0]
 
     def weighted_choice(self):
         max_fitness = max([organism.fitness for organism in self.population])
