@@ -29,7 +29,7 @@ class Organism:
                     time += int(random.uniform(-4,4))
                     if time > 32:
                         time = 32
-                    if time < -32
+                    if time < -32:
                         time = -32
             c.genome[i] = (note,time)
         return c

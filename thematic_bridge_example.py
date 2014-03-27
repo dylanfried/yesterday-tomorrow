@@ -1,6 +1,6 @@
 from Organism import Organism
 from Population import Population
-from WAVWriter import WAVWriter
+from WAVWriter import WAVWriter,LilyWriter
 
 tomorrow_combined = [(52,4),(54,8),(52,4),(49,8),(54,8),(52,4),(49,8),(54,8),(52,4),(45,8),(52,8),(50,4),(47,8),(50,8),(49,4),(45,8),(40,4),(47,4),(45,1)]
 tomorrow = [52,54,52,49,54,52,49,54,52,45,52,50,47,50,49,45,40,47,45]
@@ -14,9 +14,11 @@ sun = [(0, 4), (52, 8), (50, 4), (52, 4), (48, -4), (52, 8), (48, 8), (50, 8), (
 
 p_melody = Population(100,None,(yesterday_combined,sun),(1,5),1)
 
-w = WAVWriter()
+w = LilyWriter()
 #w.write(p_melody.best(1)[0].resolve(yesterday,tomorrow),"output/"+str(p_melody.number_of_generations)+".wav")
 #w.write(tomorrow,"output/final.wav")
+w.write(yesterday_combined,"output/start")
+print yesterday_combined
 print p_melody.best(1)[0].resolve(yesterday_combined,sun),"gens:", p_melody.number_of_generations, "melody:",p_melody.most_fit()
 print tomorrow
 last_fit = 0.0
@@ -39,5 +41,5 @@ except KeyboardInterrupt:
 print "OUT"
 print p_melody.best(1)[0].resolve(yesterday_combined,sun),"gens:", p_melody.number_of_generations, "melody:",p_melody.most_fit(),"level:",p_melody.best(1)[0].fitness_level
 print tomorrow
-w.write(p_melody.best(1)[0].resolve(yesterday_combined,sun),"output/"+str(p_melody.number_of_generations)+"_final.wav")
-w.write(p_melody.best(1)[0].best_path(yesterday_combined,sun,4),"output/"+str(p_melody.number_of_generations)+"_path.wav")
+w.write(p_melody.best(1)[0].resolve(yesterday_combined,sun),"output/"+str(p_melody.number_of_generations)+"_final")
+w.write(p_melody.best(1)[0].best_path(yesterday_combined,sun,4),"output/"+str(p_melody.number_of_generations)+"_path")
