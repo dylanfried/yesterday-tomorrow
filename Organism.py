@@ -26,11 +26,17 @@ class Organism:
             # time
             if random.random() < 0.1:
                 if random.random() < 0.5:
-                    time += int(random.uniform(-4,4))
-                    if time > 32:
-                        time = 32
-                    if time < -32:
-                        time = -32
+                    time *= 2
+                else:
+                    time /= 2
+                if random.random() < 0.5:
+                    time *= -1
+                if time > 32:
+                    time = 32
+                elif time < -32:
+                    time = -32
+                elif time == 0:
+                    time = 1
             c.genome[i] = (note,time)
         return c
     
@@ -56,12 +62,18 @@ class Organism:
         
         return [c1,c2]
     
-    def calculate_fitness(self,target,):
+    def calculate_fitness(self,target,other_genomes=None):
         ''' Calculate the fitness of this organism '''
         f = 0
         for i in range(len(self.genome)):
             f += (self.genome[i][0] - target[i][0])**2
             f += (self.genome[i][1] - target[i][1])**2
+        if other_genomes:
+            for other_genome in other_genomes:
+                for i in range(len(self.genome)):
+                    if abs(self.genome[i][0] - other_genome[i][0]) in [2, 4, 5, 7, 9, 11]:
+                        f -= 50
+                        
         self.fitness = f
     
     def copy(self):

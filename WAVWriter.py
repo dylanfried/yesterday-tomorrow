@@ -42,14 +42,7 @@ class LilyWriter:
     
     result = {
         <<
-        \\new Staff
-        {
-            \\time 4/4
-            \clef treble
-            {
-                $melody
-            }
-        }
+            $staves
         >>
     }
     
@@ -72,40 +65,48 @@ class LilyWriter:
         \layout {}
     }
     """
+    STAFF_TEMPLATE = """
+        \\new Staff
+        {
+            \\time 4/4
+            \clef treble
+            {
+                $melody
+            }
+        }
+    """
     keys_s = ('a', 'ais', 'b', 'c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis')
-    def write(self,melody, title):
+    def write(self,melodies, title):
         created_on = datetime.datetime.today()
-        
-        abc_notation = []
-        
-        for i in range(len(melody)):
-            if isinstance(melody[i],tuple):
-                note = melody[i][0]
-                note_time = melody[i][1]
-            else:
-                note = melody[i]
-                if times:
-                    note_time = times[i]
-                    if note_time == 0:
-                        note_time = 4
+        staves = []
+        for melody in melodies:
+            abc_notation = []
+            
+            for i in range(len(melody)):
+                if isinstance(melody[i],tuple):
+                    note = melody[i][0]
+                    note_time = melody[i][1]
                 else:
+                    note = melody[i]
                     note_time = 4
-            if note_time < 0:
-                note_time = str(abs(note_time)) + "."
-            else:
-                note_time = str(note_time)
-            abc_notation.append(self.number_to_abc(note) + note_time)
-        print "ABC to write:",abc_notation
+                if note_time < 0:
+                    note_time = str(abs(note_time)) + "."
+                else:
+                    note_time = str(note_time)
+                abc_notation.append(self.number_to_abc(note) + note_time)
+            print "ABC to write:",abc_notation
+            staff = Template(self.STAFF_TEMPLATE)
+            staves.append(staff.substitute({'melody':" ".join(abc_notation)}))
         
         context = {}
         context['title'] = title
         context['created_on'] = created_on.strftime('%c')
-        context['melody'] = " ".join(abc_notation)
+        context['staves'] = " ".join(staves)
         # Sanity check...
         score = Template(self.TEMPLATE)
         score = score.substitute(context)
         
-        f = open(title + ".ly","wb")
+        f = open(title + "_" + created_on.strftime('%H%M%S') + ".ly","wb")
         f.write(score)
         f.close()
     

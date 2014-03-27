@@ -1,5 +1,6 @@
 import random
 from OperationOrganism import OperationOrganism
+from Organism import Organism
 
 class Population:
     
@@ -15,11 +16,11 @@ class Population:
         self.number_of_generations = 0
         
         for i in range(self.number_of_organisms):
-            self.population.append(OperationOrganism(start_melody))
+            self.population.append(Organism(start_melody))
         
         self.calculate_fitness()
     
-    def generation(self):
+    def generation(self,other_melodies=None):
         ''' Move forward one generation '''
         try:                                             
             new_population = []
@@ -61,15 +62,15 @@ class Population:
             self.population = new_population
             self.number_of_generations += 1
             # Calculate fitness
-            self.calculate_fitness()
+            self.calculate_fitness(other_melodies)
         except KeyboardInterrupt:
             print "Caught keyboard interrupt"
-            self.calculate_fitness()
+            self.calculate_fitness(other_melodies)
             raise
     
-    def calculate_fitness(self):
+    def calculate_fitness(self,other_melodies=None):
         for organism in self.population:
-            organism.calculate_fitness(self.end_melody)
+            organism.calculate_fitness(self.end_melody,other_melodies)
     
     def most_fit(self):
         ''' Return the highest fitness '''

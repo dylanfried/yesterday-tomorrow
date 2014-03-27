@@ -17,7 +17,7 @@ p_melody = Population(100,None,(yesterday_combined,sun),(1,5),1)
 w = LilyWriter()
 #w.write(p_melody.best(1)[0].resolve(yesterday,tomorrow),"output/"+str(p_melody.number_of_generations)+".wav")
 #w.write(tomorrow,"output/final.wav")
-w.write(yesterday_combined,"output/start")
+w.write([yesterday_combined],"output/start")
 print yesterday_combined
 print p_melody.best(1)[0].resolve(yesterday_combined,sun),"gens:", p_melody.number_of_generations, "melody:",p_melody.most_fit()
 print tomorrow
@@ -41,5 +41,5 @@ except KeyboardInterrupt:
 print "OUT"
 print p_melody.best(1)[0].resolve(yesterday_combined,sun),"gens:", p_melody.number_of_generations, "melody:",p_melody.most_fit(),"level:",p_melody.best(1)[0].fitness_level
 print tomorrow
-w.write(p_melody.best(1)[0].resolve(yesterday_combined,sun),"output/"+str(p_melody.number_of_generations)+"_final")
-w.write(p_melody.best(1)[0].best_path(yesterday_combined,sun,4),"output/"+str(p_melody.number_of_generations)+"_path")
+w.write([p_melody.best(1)[0].resolve(yesterday_combined,sun)],"output/"+str(p_melody.number_of_generations)+"_final")
+w.write([p_melody.best(1)[0].best_path(yesterday_combined,sun,4)],"output/"+str(p_melody.number_of_generations)+"_path")
