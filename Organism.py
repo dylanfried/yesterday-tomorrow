@@ -1,5 +1,7 @@
 from copy import deepcopy
 import random
+import numpy as np
+from helpers import get_intervals
 
 class Organism:
     genome = None
@@ -70,9 +72,9 @@ class Organism:
             f += (self.genome[i][1] - target[i][1])**2
         if other_genomes:
             for other_genome in other_genomes:
-                for i in range(len(self.genome)):
-                    if abs(self.genome[i][0] - other_genome[i][0]) in [2, 4, 5, 7, 9, 11]:
-                        f -= 50
+                intervals1 = get_intervals([g[0] for g in self.genome])
+                intervals2 = get_intervals([g[0] for g in other_genome])
+                f -= 50*max(np.correlate(intervals1/np.linalg.norm(intervals1),intervals2/np.linalg.norm(intervals2)))
                         
         self.fitness = f
     
