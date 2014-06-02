@@ -30,17 +30,19 @@ last_melody_fitness = p_melody.most_fit()
 
 try:
     while True:
-        if p_melody.most_fit() > 250 and p_melody2.most_fit() > 250:
+        if p_melody.most_fit() > 500 or p_melody2.most_fit() > 500:
             p_melody.generation([p_melody2.best(1)[0].genome])
             p_melody2.generation([p_melody.best(1)[0].genome])
-        if last_melody_fitness - p_melody.most_fit() > 1000 or last_melody_fitness - p_melody2.most_fit() > 1000:
+        if p_melody.number_of_generations % 2 == 0 or last_melody_fitness - p_melody.most_fit() > 1000 or last_melody_fitness - p_melody2.most_fit() > 1000:
+            print p_melody.number_of_generations
+            print p_melody2.number_of_generations
             print "melody:",p_melody.most_fit()
             print "melody2:",p_melody2.most_fit()
             #w.write([p_melody.best(1)[0].genome],"output/"+str(p_melody.number_of_generations))
             path += p_melody.best(1)[0].genome
             path2 += p_melody2.best(1)[0].genome
             last_melody_fitness = min(p_melody.most_fit(),p_melody2.most_fit())
-        if p_melody.most_fit() <= 250:
+        if p_melody.most_fit() <= 500 and p_melody2.most_fit() <= 500:
             break
 except KeyboardInterrupt:
     print "STOPPED"
