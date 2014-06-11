@@ -1,6 +1,7 @@
 import pysynth
 import datetime
 from string import Template
+import subprocess
 
 class WAVWriter:
     keys_s = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
@@ -106,9 +107,11 @@ class LilyWriter:
         score = Template(self.TEMPLATE)
         score = score.substitute(context)
         
-        f = open(title + "_" + created_on.strftime('%H%M%S') + ".ly","wb")
+        f = open(title + "_" + created_on.strftime('%m-%d-%H%M%S') + ".ly","wb")
         f.write(score)
         f.close()
+        print f.name
+        subprocess.call("lilypond " + f.name)
     
     def number_to_abc(self,number):
         if number == 0:

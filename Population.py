@@ -29,7 +29,13 @@ class Population:
             #b = self.best(1)[0]
             #new_population += [b.copy() for i in range(int(self.number_of_organisms*0.01))]
             
-            sampled = self.sample(self.number_of_organisms)
+            # Generate some random organisms
+            #for i in range(self.number_of_organisms - len(new_population)):
+            #    random_organism = Organism()
+            #    random_organism.random_genome(len(self.end_melody))
+            #    new_population.append(random_organism)
+            
+            sampled = self.sample(int(self.number_of_organisms))
             
             random.shuffle(sampled)
             
