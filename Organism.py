@@ -1,7 +1,7 @@
 from copy import deepcopy
 import random
 import numpy as np
-from helpers import get_intervals,make_absolute
+from helpers import get_intervals,make_absolute,SYLLABLES
 
 class Organism:
     genome = None
@@ -19,7 +19,10 @@ class Organism:
             time = random.sample([8,4,2,1,-1,-2,-4,-8],1)[0]
             if random.random() > 0.8:
                 note = 0
-            self.genome.append((note,time))
+            syllable = ''
+            if note != 0:
+                syllable = random.sample(SYLLABLES,1)[0]
+            self.genome.append((note,time,syllable))
     
     def mutate(self,gene_range,mutate_max):
         ''' Return a mutated organism '''
@@ -27,6 +30,7 @@ class Organism:
         for i in range(len(c.genome)):
             note = c.genome[i][0]
             time = c.genome[i][1]
+            syllable = c.genome[i][2]
             # Note
             if random.random() < 0.1:
                 if (note and random.random() < 0.8) or (not note and random.random() < 0.2):
@@ -51,7 +55,12 @@ class Organism:
                     time = -16
                 elif time == 0:
                     time = 1
-            c.genome[i] = (note,time)
+            # Syllable
+            if note == 0:
+                syllable = ''
+            elif random.random() < 0.1 or syllable == '':
+                syllable = random.sample(SYLLABLES,1)[0]
+            c.genome[i] = (note,time,syllable)
         return c
     
     def crossover(self,organism):
@@ -100,6 +109,8 @@ class Organism:
                     f += (self.genome[self_index][0] - genome_absolute[target_index][0])**2
                 #elif self.genome[self_index][0] != 0 or genome_absolute[target_index][0] != 0:
                 #    f += 10
+                if first and self.genome[self_index][2] != genome_absolute[target_index][2]:
+                    f += 10
                 absolute_time += 1.0/32.0
                 if absolute_time > self_absolute[self_index][1]:
                     self_index += 1

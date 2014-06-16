@@ -75,6 +75,7 @@ class LilyWriter:
             {
                 $melody
             }
+            \\addlyrics { $lyrics }
         }
     """
     keys_s = ('a', 'ais', 'b', 'c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis')
@@ -86,6 +87,10 @@ class LilyWriter:
             melody = melodies[i]
             instrument = instruments[i]
             abc_notation = []
+            lyrics = []
+            
+            # keep a running time total for inserting bars
+            running_time = 0
             
             for i in range(len(melody)):
                 if isinstance(melody[i],tuple):
@@ -94,28 +99,48 @@ class LilyWriter:
                 else:
                     note = melody[i]
                     note_time = 4
+                if note_time > 0:
+                    running_time += 1.0/note_time
+                else:
+                    running_time += 1.0/abs(note_time) + (1.0/abs(note_time))/2.0
                 if note_time < 0:
                     note_time = str(abs(note_time)) + "."
                 else:
                     note_time = str(note_time)
+                lyrics.append(melody[i][2])
                 abc_notation.append(self.number_to_abc(note) + note_time)
+                if running_time >= 1:
+                    running_time = 0
+                    abc_notation.append('\\bar ""')
             print "ABC to write:",abc_notation
             staff = Template(self.STAFF_TEMPLATE)
-            staves.append(staff.substitute({'melody':" ".join(abc_notation),'instrument':instrument}))
-        
+            staves.append(staff.substitute({'melody':" ".join(abc_notation),'instrument':instrument,'lyrics':" ".join(lyrics)}))
+        # Print out combined and separate music
+        for i in range(len(staves)):
+            # First
+            context = {}
+            context['title'] = title + " Part " + str(i)
+            context['created_on'] = created_on.strftime('%c')
+            context['staves'] = staves[i]
+            score = Template(self.TEMPLATE)
+            score = score.substitute(context)
+            f = open(title + "_" + created_on.strftime('%m-%d-%H%M%S') + "_PART" + str(i) + ".ly","wb")
+            f.write(score)
+            f.close()
+            print f.name
+            subprocess.call("lilypond " + f.name,shell=True)
+        # Combined
         context = {}
         context['title'] = title
         context['created_on'] = created_on.strftime('%c')
         context['staves'] = " ".join(staves)
-        # Sanity check...
         score = Template(self.TEMPLATE)
         score = score.substitute(context)
-        
-        f = open(title + "_" + created_on.strftime('%m-%d-%H%M%S') + ".ly","wb")
+        f = open(title + "_" + created_on.strftime('%m-%d-%H%M%S')+ "_COMBINED_"  + ".ly","wb")
         f.write(score)
         f.close()
         print f.name
-        subprocess.call("lilypond " + f.name)
+        subprocess.call("lilypond " + f.name,shell=True)
     
     def number_to_abc(self,number):
         if number == 0:
