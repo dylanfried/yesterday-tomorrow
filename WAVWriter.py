@@ -60,7 +60,7 @@ class LilyWriter:
         \midi {
             \context {
                 \Score
-                tempoWholesPerMinute = #(ly:make-moment 160 4)
+                tempoWholesPerMinute = #(ly:make-moment 130 4)
             }
         }
         \layout {}
@@ -69,6 +69,7 @@ class LilyWriter:
     STAFF_TEMPLATE = """
         \\new Staff
         {
+            \set Staff.midiInstrument = #"$instrument"
             \\time 4/4
             \clef treble
             {
@@ -80,7 +81,10 @@ class LilyWriter:
     def write(self,melodies, title):
         created_on = datetime.datetime.today()
         staves = []
-        for melody in melodies:
+        instruments = ['piano','cello']
+        for i in range(len(melodies)):
+            melody = melodies[i]
+            instrument = instruments[i]
             abc_notation = []
             
             for i in range(len(melody)):
@@ -97,7 +101,7 @@ class LilyWriter:
                 abc_notation.append(self.number_to_abc(note) + note_time)
             print "ABC to write:",abc_notation
             staff = Template(self.STAFF_TEMPLATE)
-            staves.append(staff.substitute({'melody':" ".join(abc_notation)}))
+            staves.append(staff.substitute({'melody':" ".join(abc_notation),'instrument':instrument}))
         
         context = {}
         context['title'] = title

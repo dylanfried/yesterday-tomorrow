@@ -1,3 +1,5 @@
+from math import log
+
 def shift(l, n):
     return l[n:] + l[:n]
 
@@ -24,10 +26,25 @@ def make_absolute(combined):
 def pad_melodies(melodies):
     absolute_melodies = [make_absolute(m) for m in melodies]
     longest = max([m[-1][1] for m in absolute_melodies])
+    padding = []
     print "longest",longest
     for i in range(len(melodies)):
         print absolute_melodies[i][-1][1]
         if absolute_melodies[i][-1][1] < longest:
-            print "appending",(0,int(1.0/(longest-absolute_melodies[i][-1][1])))
-            melodies[i].append((0,int(1.0/(longest-absolute_melodies[i][-1][1]))))
-    return melodies
+            diff = (longest-absolute_melodies[i][-1][1])/(1.0/64.0)
+            print "appending",diff,"rests"
+            #if int(diff) != diff:
+            #    # Need to add a half rest in there
+            #    melodies[i].append((0,-32))
+            #    diff -= 1.5
+            placeholder = []
+            for j in range(int(diff)):
+                placeholder.append((0,64))
+            padding.append(placeholder)
+        else:
+            padding.append([])
+    return padding
+    
+def nearest_pow_of_2(n):
+    print "n",n
+    return pow(2, int(log(n, 2) + 0.5))

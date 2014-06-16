@@ -20,7 +20,7 @@ last_melody_fitness = p_melody.most_fit()
 
 try:
     while True:
-        if p_melody.most_fit() > 200 or p_melody2.most_fit() > 200:
+        if p_melody.most_fit() > 50 or p_melody2.most_fit() > 50:
             p_melody.generation([p_melody2.best(1)[0].genome])
             p_melody2.generation([p_melody.best(1)[0].genome])
         if True or p_melody.number_of_generations % 3 == 0 or last_melody_fitness - p_melody.most_fit() > 1000 or last_melody_fitness - p_melody2.most_fit() > 1000:
@@ -31,16 +31,15 @@ try:
             #w.write([p_melody.best(1)[0].genome],"output/"+str(p_melody.number_of_generations))
             best1 = p_melody.best(1)[0].genome
             best2 = p_melody2.best(1)[0].genome
-            best1, best2 = pad_melodies([best1,best2])
-            path += best1
-            path2 += best2
+            padding1, padding2 = pad_melodies([best1,best2])
+            path += best1 + padding1
+            path2 += best2 + padding2
             last_melody_fitness = min(p_melody.most_fit(),p_melody2.most_fit())
-        if p_melody.most_fit() <= 200 and p_melody2.most_fit() <= 200:
+        if p_melody.most_fit() <= 50 and p_melody2.most_fit() <= 50:
             break
 except KeyboardInterrupt:
     print "STOPPED"
 
-path += sun
-path2 += sun
-path += sun
+#path += sun
+#path2 += sun
 w.write([path,path2],"output/simple_path")

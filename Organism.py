@@ -45,10 +45,10 @@ class Organism:
                     time /= 2
                 if random.random() < 0.5:
                     time *= -1
-                if time > 32:
-                    time = 32
-                elif time < -32:
-                    time = -32
+                if time > 16:
+                    time = 16
+                elif time < -16:
+                    time = -16
                 elif time == 0:
                     time = 1
             c.genome[i] = (note,time)
@@ -90,12 +90,13 @@ class Organism:
         if other_genomes:
             genomes_absolute += [make_absolute(genome) for genome in other_genomes]
         f = 0
+        first = True
         for genome_absolute in genomes_absolute:
             self_index = 0
             target_index = 0
             absolute_time = 0
             while self_index < len(self.genome) and target_index < len(genome_absolute):
-                if self.genome[self_index][0] != 0 and genome_absolute[target_index][0] != 0:
+                if first or (self.genome[self_index][0] != 0 and genome_absolute[target_index][0] != 0):
                     f += (self.genome[self_index][0] - genome_absolute[target_index][0])**2
                 #elif self.genome[self_index][0] != 0 or genome_absolute[target_index][0] != 0:
                 #    f += 10
@@ -104,6 +105,8 @@ class Organism:
                     self_index += 1
                 if absolute_time > genome_absolute[target_index][1]:
                     target_index += 1
+            # Do special things for first melody because it is the true target
+            first = False
         #if other_genomes:
         #    for other_genome in other_genomes:
         #        intervals1 = get_intervals([g[0] for g in self.genome])
