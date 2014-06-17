@@ -1,4 +1,4 @@
-from math import log
+from math import log,sqrt
 from hyphen import Hyphenator
 import re
 
@@ -123,12 +123,12 @@ def pad_melodies(melodies):
     absolute_melodies = [make_absolute(m) for m in melodies]
     longest = max([m[-1][1] for m in absolute_melodies])
     padding = []
-    print "longest",longest
+    #print "longest",longest
     for i in range(len(melodies)):
-        print absolute_melodies[i][-1][1]
+        #print absolute_melodies[i][-1][1]
         if absolute_melodies[i][-1][1] < longest:
             diff = (longest-absolute_melodies[i][-1][1])/(1.0/64.0)
-            print "appending",diff,"rests"
+            #print "appending",diff,"rests"
             placeholder = []
             while diff//64 > 0:
                 placeholder.append((0,1,[]))
@@ -151,7 +151,7 @@ def pad_melodies(melodies):
             while diff > 0:
                 placeholder.append((0,64,[]))
                 diff -= 1
-            print placeholder
+            #print placeholder
             #if int(diff) != diff:
             #    # Need to add a half rest in there
             #    melodies[i].append((0,-32))
@@ -164,5 +164,12 @@ def pad_melodies(melodies):
     return padding
     
 def nearest_pow_of_2(n):
-    print "n",n
+    #print "n",n
     return pow(2, int(log(n, 2) + 0.5))
+
+def counter_cosine_similarity(c1, c2):
+    terms = set(c1).union(c2)
+    dotprod = sum(c1.get(k, 0) * c2.get(k, 0) for k in terms)
+    magA = sqrt(sum(c1.get(k, 0)**2 for k in terms))
+    magB = sqrt(sum(c2.get(k, 0)**2 for k in terms))
+    return dotprod / (magA * magB)
