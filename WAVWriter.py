@@ -107,7 +107,7 @@ class LilyWriter:
                     note_time = str(abs(note_time)) + "."
                 else:
                     note_time = str(note_time)
-                lyrics.append(melody[i][2])
+                lyrics.append(" ".join(melody[i][2]))
                 abc_notation.append(self.number_to_abc(note) + note_time)
                 if running_time >= 1:
                     running_time = 0

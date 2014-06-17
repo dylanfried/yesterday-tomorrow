@@ -19,7 +19,7 @@ class Organism:
             time = random.sample([8,4,2,1,-1,-2,-4,-8],1)[0]
             if random.random() > 0.8:
                 note = 0
-            syllable = ''
+            syllable = []
             if note != 0:
                 syllable = random.sample(SYLLABLES,1)[0]
             self.genome.append((note,time,syllable))
@@ -57,7 +57,7 @@ class Organism:
                     time = 1
             # Syllable
             if note == 0:
-                syllable = ''
+                syllable = []
             elif random.random() < 0.1 or syllable == '':
                 syllable = random.sample(SYLLABLES,1)[0]
             c.genome[i] = (note,time,syllable)
@@ -109,8 +109,8 @@ class Organism:
                     f += (self.genome[self_index][0] - genome_absolute[target_index][0])**2
                 #elif self.genome[self_index][0] != 0 or genome_absolute[target_index][0] != 0:
                 #    f += 10
-                if first and self.genome[self_index][2] != genome_absolute[target_index][2]:
-                    f += 10
+                #if first and self.genome[self_index][2] != genome_absolute[target_index][2]:
+                #    f += 10
                 absolute_time += 1.0/32.0
                 if absolute_time > self_absolute[self_index][1]:
                     self_index += 1
