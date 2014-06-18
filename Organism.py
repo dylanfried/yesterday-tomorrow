@@ -207,6 +207,22 @@ class Organism:
                     f -= 10000*counter_cosine_similarity(c1,c2)
                 first = False
         times.append(time.clock()-tim)
+        # 2-gram counters
+        tim = time.clock()
+        first = True
+        if genomes_absolute:
+            c1 = collections.Counter([(self.genome[index][0],self.genome[index+1][0]) for index in range(len(self.genome)-1)])
+            for genome_absolute in genomes_absolute:
+                c2 = collections.Counter([(genome_absolute[index][0],genome_absolute[index+1][0]) for index in range(len(genome_absolute)-1)])
+                f += 1- counter_cosine_similarity(c1,c2)
+                #print "f3",f
+                continue
+                if first:
+                    f -= 100000*counter_cosine_similarity(c1,c2)
+                else:
+                    f -= 10000*counter_cosine_similarity(c1,c2)
+                first = False
+        times.append(time.clock()-tim)
         
         #print "TIMES",times
         
