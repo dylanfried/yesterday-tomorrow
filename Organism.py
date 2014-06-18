@@ -20,7 +20,7 @@ class Organism:
     def random_genome(self,length):
         for i in range(length):
             note = random.sample(get_weighted(i,length,[tup[0] for tup in self.target]),1)[0]
-            time = random.sample([8,4,2,1,-1,-2,-4,-8],1)[0]
+            time = random.sample(get_weighted(i,length,[tup[1] for tup in self.target]),1)[0]
             syllable = []
             if note != 0:
                 syllable = random.sample(SYLLABLES,1)[0]
@@ -43,8 +43,15 @@ class Organism:
                 #print i,len(c.genome)
                 #print "old",[tup[0] for tup in self.target]
                 #print "new",[tup[0] for tup in self.target for j in range(int(5*(1-abs(i/float(len(c.genome))))))]
-                c.genome.insert(i,(random.sample(get_weighted(i,len(c.genome),[tup[0] for tup in self.target]),1)[0],random.sample([8,4,2,1,-1,-2,-4,-8],1)[0],random.sample(SYLLABLES,1)[0]))
-                i += 1
+                # How many to insert?
+                insert = random.randint(1,2)
+                target_index = random.randint(0,len(self.target)-insert)
+                for j in range(insert):
+                    c.genome.insert(i,(self.target[target_index][0],self.target[target_index][1],[]))
+                    target_index += 1
+                    i += 1
+                #c.genome.insert(i,(random.sample(get_weighted(i,len(c.genome),[tup[0] for tup in self.target]),1)[0],random.sample(get_weighted(i,len(c.genome),[tup[1] for tup in self.target]),1)[0],random.sample(SYLLABLES,1)[0]))
+                #i += 1
                 if i >= len(c.genome):
                     break
             # Remove note?
@@ -123,9 +130,11 @@ class Organism:
         # First, make the melodies absolute times:
         self_absolute = make_absolute(self.genome)
         genomes_absolute = []
-        genomes_absolute.append(make_absolute(target))
+        #genomes_absolute.append(make_absolute(target))
+        genomes_absolute.append(target)
         if other_genomes:
-            genomes_absolute += [make_absolute(genome) for genome in other_genomes]
+            #genomes_absolute += [make_absolute(genome) for genome in other_genomes]
+            genomes_absolute += other_genomes
         f = 0.0
         first = True
         tim = time.clock()
@@ -134,6 +143,18 @@ class Organism:
                 notes1 = [g[0] for g in self.genome]
                 notes2 = [g[0] for g in genome_absolute]
                 f += 1-max(np.correlate(notes1/np.linalg.norm(notes1),notes2/np.linalg.norm(notes2)))
+                #if other_genomes:
+                #    if first:
+                #        print "FIRST!!!!"
+                #    print "notes!",1-max(np.correlate(notes1/np.linalg.norm(notes1),notes2/np.linalg.norm(notes2)))
+                times1 = [g[1] for g in self.genome]
+                times2 = [g[1] for g in genome_absolute]
+                f += 1-max(np.correlate(times1/np.linalg.norm(times1),times2/np.linalg.norm(times2)))
+                #if other_genomes:
+                #    if not first:
+                #        print [g[1] for g in self.genome]
+                #        print [g[1] for g in genome_absolute]
+                #    print "times!",1-max(np.correlate(times1/np.linalg.norm(times1),times2/np.linalg.norm(times2)))
                 #print "f1",f
                 first = False
         #for genome_absolute in genomes_absolute:

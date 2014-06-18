@@ -168,6 +168,7 @@ def nearest_pow_of_2(n):
     return pow(2, int(log(n, 2) + 0.5))
 
 def get_weighted(i,length,population):
+    return population
     my_percent = float(i)/float(length)
     new_population = []
     for j in range(len(population)):

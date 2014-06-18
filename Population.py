@@ -27,6 +27,7 @@ class Population:
             
             # Keep copies of the best
             new_population += self.best(1)
+            #new_population += self.sample(10)
             
             sampled = self.sample(int(self.number_of_organisms)-100)
             
