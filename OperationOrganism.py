@@ -1,33 +1,39 @@
-from copy import deepcopy
+from copy import copy
 import random
 from helpers import shift
 
 class OperationOrganism:
-
-    def __init__(self,genome=None):
+    length = 1000
+    def __init__(self,genome=None,target=None):
         if genome:
             self.genome = genome[:]
         else:
-            self.genome = [(random.randint(1,5),random.randint(-20,20)) for i in range(100)]
+            self.genome = [(random.randint(1,5),random.randint(-20,20)) for i in range(self.length)]
+    
+    def random_genome(self,length):
+        return
     
     def mutate(self,gene_range,mutate_max):
         ''' Return a mutated organism '''
         c = self.copy()
         for i in range(len(c.genome)):
-            if random.random() < 0.2:
-                if random.random() > 0.5:
-                    c.genome[i] = (random.randint(gene_range[0],gene_range[1]),c.genome[i][1] + random.randint(0,mutate_max))
-                else:
-                    c.genome[i] = (random.randint(gene_range[0],gene_range[1]),c.genome[i][1] - random.randint(0,mutate_max))
+            if random.random() < 0.01:
+                # New random gene replacement
+                c.genome[i] = (random.randint(gene_range[0],gene_range[1]),random.randint(-20,20))
+            elif random.random() < 0.01:
+                # Permute just the operand
+                c.genome[i] = (c.genome[i][0],c.genome[i][1] + random.randint(-mutate_max,mutate_max))
         return c
     
     def crossover(self,organism):
         ''' Return an organism that is a crossover between this organism and the provided organism '''
-        c = self.copy()
-        for i in range(len(c.genome)):
-            if random.random() > 0.5:
-                c.genome[i] = organism.genome[i]
-        return c
+        c1 = self.copy()
+        c2 = organism.copy()
+        for i in range(min(len(c1.genome),len(c2.genome))):
+            if random.random() < 0.3:
+                c1.genome[i] = organism.genome[i]
+                c2.genome[i] = self.genome[i]
+        return [c1,c2]
     
     def onepointcrossover(self,organism):
         inflection_point = random.randint(0,len(organism.genome)-1)
@@ -43,9 +49,21 @@ class OperationOrganism:
         
         return [c1,c2]
     
-    def calculate_fitness(self,target):
+    def calculate_fitness(self,target,other_genomes=None):
         ''' Calculate the fitness of this organism '''
         # First, must resolve
+        result = self.resolve(target[0],target[1])
+        final_pattern = target[1]
+        p_common = 0
+        p_correct = 0
+        p_common = float(len([1 for item in result if item in final_pattern]))/float(max(len(result),len(final_pattern)))
+        for idx,item in enumerate(result):
+            if idx < len(final_pattern) and item == final_pattern[idx]:
+                p_correct += 1
+        p_correct = float(p_correct)/float(max(len(result),len(final_pattern)))
+        self.fitness = 1.0 - 0.5*(p_common + p_correct)
+        self.fitness_level = self.length-1
+        return
         result_path = self.resolve(target[0],target[1],record_path=True)
         final_pattern = target[1]
         self.fitness = 1
@@ -64,7 +82,7 @@ class OperationOrganism:
     
     def copy(self):
         c = OperationOrganism()
-        c.genome = self.genome[:]
+        c.genome = copy(self.genome)
         return c
         
     def resolve(self,start_pattern,final_pattern,record_path=False):

@@ -4,7 +4,7 @@ from Organism import Organism
 
 class Population:
     
-    def __init__(self,number_of_organisms,start_melody,end_melody,gene_range=(0,88),mutate_max=10):
+    def __init__(self,number_of_organisms,start_melody,end_melody,gene_range=(0,88),mutate_max=10,organism_class=Organism):
         self.number_of_organisms = number_of_organisms
         self.start_melody = start_melody
         self.end_melody = end_melody
@@ -15,8 +15,10 @@ class Population:
         self.population = []
         self.number_of_generations = 0
         
+        self.organism_class = organism_class
+        
         for i in range(self.number_of_organisms):
-            self.population.append(Organism(start_melody,end_melody))
+            self.population.append(organism_class(start_melody,end_melody))
         
         self.calculate_fitness()
     
@@ -44,7 +46,7 @@ class Population:
             
             # Generate some random organisms
             for i in range(self.number_of_organisms - len(new_population)):
-                random_organism = Organism(None,self.end_melody)
+                random_organism = self.organism_class(None,self.end_melody)
                 random_organism.random_genome(len(self.end_melody))
                 new_population.append(random_organism)
             
