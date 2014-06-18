@@ -67,12 +67,12 @@ yesterday_combined = helpers.assign_syllables(yesterday_combined,helpers.yesterd
 tomorrow = helpers.assign_syllables(tomorrow,helpers.tomorrow_lyrics)
 
 p_melody = Population(1000,yesterday_combined,tomorrow,(19,88),10)
-p_melody2 = Population(1000,yesterday_combined,tomorrow,(19,88),10)
+#p_melody2 = Population(1000,yesterday_combined,tomorrow,(19,88),10)
 
 path = []
 path += p_melody.best(1)[0].genome
-path2 = []
-path2 += p_melody2.best(1)[0].genome
+#path2 = []
+#path2 += p_melody2.best(1)[0].genome
 
 last_melody_fitness = p_melody.most_fit()
 
@@ -80,18 +80,26 @@ interval = 1
 
 repeats = 0
 
+total_paths = 0
+
 try:
     while True:
-        if p_melody.most_fit() > 0.05 or p_melody2.most_fit() > 0.05:
-        #if p_melody.most_fit() > 0.2:
-            p_melody.generation([p_melody2.best(1)[0].genome])
-            #p_melody.generation()
-            p_melody2.generation([p_melody.best(1)[0].genome])
-        new_melody_fitness = min(p_melody.most_fit(),p_melody2.most_fit())
+        #if p_melody.most_fit() > 0.05 or p_melody2.most_fit() > 0.05:
+        if p_melody.most_fit() > 0.05:
+            #p_melody.generation([p_melody2.best(1)[0].genome])
+            p_melody.generation()
+            #p_melody2.generation([p_melody.best(1)[0].genome])
+        #new_melody_fitness = min(p_melody.most_fit(),p_melody2.most_fit())
+        new_melody_fitness = p_melody.most_fit()
         if new_melody_fitness != last_melody_fitness:
             repeats = 0
-        if  repeats < 1 and (p_melody.number_of_generations % interval == 0 or last_melody_fitness - p_melody.most_fit() > 0.1 or last_melody_fitness - p_melody2.most_fit() > 0.1):
-            print "GEN: ",p_melody.number_of_generations, "FITNESS:",min(p_melody.most_fit(),p_melody2.most_fit()), "||"
+        else:
+            repeats += 1
+        #if  repeats < 1 and (p_melody.number_of_generations % interval == 0 or last_melody_fitness - p_melody.most_fit() > 0.1 or last_melody_fitness - p_melody2.most_fit() > 0.1):
+        if  repeats < 1 and (p_melody.number_of_generations % interval == 0 or last_melody_fitness - p_melody.most_fit() > 0.1):
+            total_paths += 1
+            #print "GEN: ",p_melody.number_of_generations, "FITNESS:",min(p_melody.most_fit(),p_melody2.most_fit()), "||"
+            print "MIDI GEN: ", total_paths, "GEN: ",p_melody.number_of_generations, "FITNESS:",p_melody.most_fit(), "||"
             if p_melody.number_of_generations > 30:
                 interval = 5
             if p_melody.number_of_generations > 100:
@@ -101,19 +109,20 @@ try:
             #print "melody2:",p_melody2.most_fit()
             #w.write([p_melody.best(1)[0].genome],"output/"+str(p_melody.number_of_generations))
             best1 = p_melody.best(1)[0].genome
-            best2 = p_melody2.best(1)[0].genome
-            padding1, padding2 = helpers.pad_melodies([best1,best2])
-            path += best1 + padding1
-            #path += best1
-            path2 += best2 + padding2
-            if last_melody_fitness == min(p_melody.most_fit(),p_melody2.most_fit()):
-                repeats += 1
-            else:
-                repeats = 0
-            last_melody_fitness = min(p_melody.most_fit(),p_melody2.most_fit())
-            #last_melody_fitness = p_melody.most_fit()
-        if p_melody.most_fit() <= 0.05 and p_melody2.most_fit() <= 0.05:
-        #if p_melody.most_fit() <= 0.2:
+            #best2 = p_melody2.best(1)[0].genome
+            #padding1, padding2 = helpers.pad_melodies([best1,best2])
+            #path += best1 + padding1
+            path += best1
+            #path2 += best2 + padding2
+            #if last_melody_fitness == min(p_melody.most_fit(),p_melody2.most_fit()):
+            #if last_melody_fitness == p_melody.most_fit():
+            #    repeats += 1
+            #else:
+            #    repeats = 0
+            #last_melody_fitness = min(p_melody.most_fit(),p_melody2.most_fit())
+            last_melody_fitness = p_melody.most_fit()
+        #if p_melody.most_fit() <= 0.05 and p_melody2.most_fit() <= 0.05:
+        if p_melody.most_fit() <= 0.05:
             break
 except KeyboardInterrupt:
     print "STOPPED"
@@ -125,4 +134,5 @@ except KeyboardInterrupt:
 #lyrics1 = generate_lyrics(path1)
 #lyrics2 = generate_lyrics(path2)
 
-w.write([path,path2],"output/simple_path")
+#w.write([path,path2],"output/simple_path")
+w.write([path],"output/simple_path")
