@@ -1,26 +1,26 @@
 from copy import copy
 import random
 import numpy as np
-from helpers import get_intervals,make_absolute,SYLLABLES,counter_cosine_similarity
+from helpers import get_intervals,make_absolute,SYLLABLES,counter_cosine_similarity,get_weighted
 import collections
 import time
 
 class Organism:
     genome = None
     fitness = None
+    target = None
     
-    def __init__(self,genome=None):
+    def __init__(self,genome=None,target_genome=None):
         if genome:
             self.genome = copy(genome)
         else:
             self.genome = []
+        self.target = target_genome
     
     def random_genome(self,length):
         for i in range(length):
-            note = random.randint(19,88)
+            note = random.sample(get_weighted(i,length,[tup[0] for tup in self.target]),1)[0]
             time = random.sample([8,4,2,1,-1,-2,-4,-8],1)[0]
-            if random.random() > 0.8:
-                note = 0
             syllable = []
             if note != 0:
                 syllable = random.sample(SYLLABLES,1)[0]
@@ -39,32 +39,35 @@ class Organism:
                 print "g",c.genome[i]
             syllable = c.genome[i][2]
             # Add note?
-            if random.random() < 0.05:
-                if random.random() < 0.5:
-                    c.genome.insert(i,(random.randint(19,88),random.sample([8,4,2,1,-1,-2,-4,-8],1)[0],random.sample(SYLLABLES,1)[0]))
-                else:
-                    c.genome.insert(i,(0,random.sample([8,4,2,1,-1,-2,-4,-8],1)[0],[]))
+            if random.random() < 0.02:
+                #print i,len(c.genome)
+                #print "old",[tup[0] for tup in self.target]
+                #print "new",[tup[0] for tup in self.target for j in range(int(5*(1-abs(i/float(len(c.genome))))))]
+                c.genome.insert(i,(random.sample(get_weighted(i,len(c.genome),[tup[0] for tup in self.target]),1)[0],random.sample([8,4,2,1,-1,-2,-4,-8],1)[0],random.sample(SYLLABLES,1)[0]))
                 i += 1
                 if i >= len(c.genome):
                     break
             # Remove note?
-            if random.random() < 0.05 and i > 0:
+            if random.random() < 0.02 and i > 0:
                 c.genome.pop(i-1)
                 i -= 1
                 if i >= len(c.genome):
                     break
             # Note
-            if random.random() < 0.05:
+            if random.random() < 0.02:
                 if (note and random.random() < 0.85) or (not note and random.random() < 0.15):
-                    note += int(random.uniform(-mutate_max,mutate_max))
-                    if note > gene_range[1]:
-                        note = gene_range[1]
-                    if note < gene_range[0]:
-                        note = gene_range[0]
+                    if random.random() < 0.5 and len([tup[0] for tup in self.target if tup[0] >= note - mutate_max and tup[0] <= note + mutate_max]) > 0:
+                        note = random.sample(get_weighted(i,len(c.genome),[tup[0] for tup in self.target if tup[0] >= note - mutate_max and tup[0] <= note + mutate_max]),1)[0]
+                    else:
+                        note += int(random.uniform(-mutate_max,mutate_max))
+                        if note > gene_range[1]:
+                            note = gene_range[1]
+                        if note < gene_range[0]:
+                            note = gene_range[0]
                 else:
                     note = 0
             # time
-            if random.random() < 0.05:
+            if random.random() < 0.02:
                 if random.random() < 0.5:
                     time *= 2
                 else:
@@ -91,7 +94,7 @@ class Organism:
         c1 = self.copy()
         c2 = organism.copy()
         for i in range(min(len(c1.genome),len(c2.genome))):
-            if random.random() > 0.5:
+            if random.random() < 0.3:
                 c1.genome[i] = organism.genome[i]
                 c2.genome[i] = self.genome[i]
         return [c1,c2]
@@ -191,4 +194,5 @@ class Organism:
     def copy(self):
         c = Organism()
         c.genome = copy(self.genome)
+        c.target = self.target
         return c

@@ -16,7 +16,7 @@ class Population:
         self.number_of_generations = 0
         
         for i in range(self.number_of_organisms):
-            self.population.append(Organism(start_melody))
+            self.population.append(Organism(start_melody,end_melody))
         
         self.calculate_fitness()
     
@@ -26,7 +26,7 @@ class Population:
             new_population = []
             
             # Keep copies of the best
-            #new_population += self.best(1)
+            new_population += self.best(1)
             
             sampled = self.sample(int(self.number_of_organisms)-100)
             
@@ -35,7 +35,7 @@ class Population:
             for i in range(0,len(sampled),2):
                 m1 = sampled[i].mutate(self.gene_range,self.mutate_max)
                 m2 = sampled[i+1].mutate(self.gene_range,self.mutate_max)
-                if random.random() > 0.7:
+                if random.random() > 0.95:
                     new_population += m1.crossover(m2)
                 else:
                     new_population.append(m1)
@@ -43,7 +43,7 @@ class Population:
             
             # Generate some random organisms
             for i in range(self.number_of_organisms - len(new_population)):
-                random_organism = Organism()
+                random_organism = Organism(None,self.end_melody)
                 random_organism.random_genome(len(self.end_melody))
                 new_population.append(random_organism)
             

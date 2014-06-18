@@ -71,6 +71,10 @@ path2 += p_melody2.best(1)[0].genome
 
 last_melody_fitness = p_melody.most_fit()
 
+interval = 1
+
+repeats = 0
+
 try:
     while True:
         if p_melody.most_fit() > 0.05 or p_melody2.most_fit() > 0.05:
@@ -78,10 +82,17 @@ try:
             p_melody.generation([p_melody2.best(1)[0].genome])
             #p_melody.generation()
             p_melody2.generation([p_melody.best(1)[0].genome])
-        if  True or p_melody.number_of_generations % 5 == 0 or last_melody_fitness - p_melody.most_fit() > 0.1 or last_melody_fitness - p_melody2.most_fit() > 0.1:
-            print p_melody.number_of_generations
+        new_melody_fitness = min(p_melody.most_fit(),p_melody2.most_fit())
+        if new_melody_fitness != last_melody_fitness:
+            repeats = 0
+        if  repeats < 2 and (p_melody.number_of_generations % interval == 0 or last_melody_fitness - p_melody.most_fit() > 0.1 or last_melody_fitness - p_melody2.most_fit() > 0.1):
+            print "GEN: ",p_melody.number_of_generations, "FITNESS:",min(p_melody.most_fit(),p_melody2.most_fit()), "||"
+            if p_melody.number_of_generations > 30:
+                interval = 5
+            if p_melody.number_of_generations > 100:
+                interval = 15
             #print p_melody2.number_of_generations
-            print "melody:",p_melody.most_fit()
+            #print "melody:",p_melody.most_fit()
             #print "melody2:",p_melody2.most_fit()
             #w.write([p_melody.best(1)[0].genome],"output/"+str(p_melody.number_of_generations))
             best1 = p_melody.best(1)[0].genome
@@ -90,6 +101,10 @@ try:
             path += best1 + padding1
             #path += best1
             path2 += best2 + padding2
+            if last_melody_fitness == min(p_melody.most_fit(),p_melody2.most_fit()):
+                repeats += 1
+            else:
+                repeats = 0
             last_melody_fitness = min(p_melody.most_fit(),p_melody2.most_fit())
             #last_melody_fitness = p_melody.most_fit()
         if p_melody.most_fit() <= 0.05 and p_melody2.most_fit() <= 0.05:

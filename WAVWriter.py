@@ -63,7 +63,6 @@ class LilyWriter:
                 tempoWholesPerMinute = #(ly:make-moment 130 4)
             }
         }
-        \layout {}
     }
     """
     STAFF_TEMPLATE = """
