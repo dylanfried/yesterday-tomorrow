@@ -3,7 +3,7 @@ import random
 from helpers import shift
 
 class OperationOrganism:
-    length = 1000
+    length = 200
     def __init__(self,genome=None,target=None):
         if genome:
             self.genome = genome[:]
