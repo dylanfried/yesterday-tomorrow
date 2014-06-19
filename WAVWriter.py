@@ -63,7 +63,7 @@ class LilyWriter:
                 tempoWholesPerMinute = #(ly:make-moment 130 4)
             }
         }
-        
+        \layout {}
     }
     """
     STAFF_TEMPLATE = """
@@ -82,7 +82,7 @@ class LilyWriter:
     def write(self,melodies, title):
         created_on = datetime.datetime.today()
         staves = []
-        instruments = ['piano','cello']
+        instruments = ['piano','acoustic guitar (steel)']
         for i in range(len(melodies)):
             melody = melodies[i]
             instrument = instruments[i]

@@ -28,10 +28,10 @@ class Population:
             new_population = []
             
             # Keep copies of the best
-            new_population += self.best(1)
-            #new_population += self.sample(50)
+            #new_population += self.best(1)
+            new_population += self.sample(25)
             
-            sampled = self.sample(int(self.number_of_organisms)-100)
+            sampled = self.sample(int(self.number_of_organisms)-50)
             
             random.shuffle(sampled)
             
@@ -96,8 +96,9 @@ class Population:
             container.append(self.tournament_choice())
         return container
 
-    def tournament_choice(self,k=2):
-        organisms = random.sample(self.population,2)
+    def tournament_choice(self,k=4):
+        organisms = random.sample(self.population,4)
+        return min(organisms,key=lambda x: x.fitness)
         if organisms[0].fitness > organisms[1].fitness:
             return organisms[1]
         else:

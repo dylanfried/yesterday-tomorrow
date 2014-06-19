@@ -8,7 +8,7 @@ class OperationOrganism:
         if genome:
             self.genome = genome[:]
         else:
-            self.genome = [(random.sample([1,2,2,3,3,4,5,6,7,8,8,8,8,8,4,4,4,4,4,4],1)[0],random.randint(-20,20)) for i in range(self.length)]
+            self.genome = [(random.sample([1,2,3,4,5,6] if i < self.length/2 else [2,3,4,4,4,4,4],1)[0],random.randint(-20,20)) for i in range(self.length)]
     
     def random_genome(self,length):
         return
@@ -19,7 +19,7 @@ class OperationOrganism:
         for i in range(len(c.genome)):
             if random.random() < 0.02:
                 # New random gene replacement
-                c.genome[i] = (random.sample([1,2,2,3,3,4,5,6,7,8,8,8,8,8,4,4,4,4,4,4],1)[0],random.randint(-20,20))
+                c.genome[i] = (random.sample([1,2,3,4,5,6] if i < self.length/2 else [2,3,4,4,4,4,4],1)[0],random.randint(-20,20))
             elif random.random() < 0.02:
                 # Permute just the operand
                 c.genome[i] = (c.genome[i][0],c.genome[i][1] + random.randint(-mutate_max,mutate_max))
@@ -159,13 +159,19 @@ class OperationOrganism:
             return result
     
     def best_path(self,start_pattern,final_pattern,condense=[1]):
-        condense = [i for i in condense for j in range(i)]
+        #condense = [i for i in condense for j in range(i)]
         to_return = []
         result_path = self.resolve(start_pattern,final_pattern,record_path=True)
         for j in range(len(condense)):
-            start = int(self.fitness_level/len(condense))*j
-            stop = int(self.fitness_level/len(condense))*(j+1)
-            for i in range(start,stop,condense[j]):
-                to_return += result_path[i] + [(0,1,[])]
+            print "J",j
+            c = condense[j]
+            print len(condense),self.fitness_level+1,int((self.fitness_level+1)/len(condense))
+            start = int((self.fitness_level+1)/len(condense))*j
+            stop = int((self.fitness_level+1)/len(condense))*(j+1)
+            print "start",start,"stop",stop
+            for i in range(start,stop,c):
+                print "i",i
+                to_return += result_path[i] + [(0,2,[])]
+        to_return += result_path[-1] + [(0,2,[])]
         #to_return += final_pattern
         return to_return

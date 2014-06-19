@@ -84,11 +84,11 @@ print tomorrow
 last_fit = 0.0
 last_gen = 0
 try:
-    while (p_melody.most_fit() + p_melody2.most_fit()) > 0.05:
+    while (p_melody.most_fit() + p_melody2.most_fit()) > 0.02:
         print "GEN: ", p_melody.number_of_generations, "\t", "(%.5f,%.5f)" % (p_melody.most_fit(),p_melody2.most_fit()), "\t\t","".join(["|" for i in range(int((p_melody.most_fit() + p_melody2.most_fit())*100))])
         p_melody.generation()
         p_melody2.generation()
-        if not last_fit or last_fit - p_melody.most_fit() > 0.05 or p_melody.number_of_generations-last_gen > 100:
+        if not last_fit or last_fit - p_melody.most_fit() > 0.02 or p_melody.number_of_generations-last_gen > 100:
             last_fit = p_melody.most_fit()
             last_gen = p_melody.number_of_generations
             #print p_melody.best(1)[0].resolve(yesterday_combined,tomorrow),"gens:", p_melody.number_of_generations, "melody:",p_melody.most_fit(),"level:",p_melody.best(1)[0].fitness_level
@@ -103,4 +103,5 @@ print "OUT"
 print p_melody.best(1)[0].resolve(yesterday_combined,tomorrow),"gens:", p_melody.number_of_generations, "melody:",p_melody.most_fit(),"level:",p_melody.best(1)[0].fitness_level
 print tomorrow
 #w.write([p_melody.best(1)[0].resolve(yesterday_combined,tomorrow)],"output/"+str(p_melody.number_of_generations)+"_final")
-w.write([p_melody.best(1)[0].best_path(yesterday_combined,tomorrow,[1,5,10,10]),p_melody2.best(1)[0].best_path(yesterday_combined,tomorrow,[1,5,10,10])],"output/"+str(p_melody.number_of_generations)+"_path")
+w.write([p_melody.best(1)[0].best_path(yesterday_combined,tomorrow,[1,5,5,5,5,5,10,10,10,10,10,10,10,10,2]),p_melody2.best(1)[0].best_path(yesterday_combined,tomorrow,[1,5,5,5,5,5,10,10,10,10,10,10,10,10,2])],"output/META_path")
+w.write([p_melody.best(1)[0].resolve(yesterday_combined,tomorrow),p_melody2.best(1)[0].resolve(yesterday_combined,tomorrow)],"output/META_final")
