@@ -63,7 +63,7 @@ class LilyWriter:
                 tempoWholesPerMinute = #(ly:make-moment 130 4)
             }
         }
-        \layout {}
+        
     }
     """
     STAFF_TEMPLATE = """
@@ -147,7 +147,7 @@ class LilyWriter:
     def number_to_abc(self,number):
         if number == 0:
             return 'r'
-        octave = (number+9) // 12
+        octave = ((number+9) // 12)
         note = '%s' % (self.keys_s[number%12])
         if octave > 4:
             for i in range(octave-4):

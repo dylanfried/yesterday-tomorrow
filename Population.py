@@ -29,7 +29,7 @@ class Population:
             
             # Keep copies of the best
             new_population += self.best(1)
-            #new_population += self.sample(10)
+            #new_population += self.sample(50)
             
             sampled = self.sample(int(self.number_of_organisms)-100)
             
@@ -104,12 +104,13 @@ class Population:
             return organisms[0]
 
     def weighted_choice(self):
-        max_fitness = max([organism.fitness for organism in self.population])
+        #max_fitness = max([organism.fitness for organism in self.population])
+        max_fitness = 1.0
         attempts = 0
         while True:
             organism = random.sample(self.population,1)[0]
             product = random.random()*max_fitness
-            if product >= organism.fitness:
+            if product <= organism.fitness:
                 return organism
             attempts += 1
             if attempts > 100:

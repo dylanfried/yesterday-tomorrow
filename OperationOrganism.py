@@ -3,12 +3,12 @@ import random
 from helpers import shift
 
 class OperationOrganism:
-    length = 200
+    length = 150
     def __init__(self,genome=None,target=None):
         if genome:
             self.genome = genome[:]
         else:
-            self.genome = [(random.randint(2,6),random.randint(-20,20)) for i in range(self.length)]
+            self.genome = [(random.sample([1,2,2,3,3,4,5,6,7,8,8,8,8,8,4,4,4,4,4,4],1)[0],random.randint(-20,20)) for i in range(self.length)]
     
     def random_genome(self,length):
         return
@@ -17,10 +17,10 @@ class OperationOrganism:
         ''' Return a mutated organism '''
         c = self.copy()
         for i in range(len(c.genome)):
-            if random.random() < 0.01:
+            if random.random() < 0.02:
                 # New random gene replacement
-                c.genome[i] = (random.randint(gene_range[0],gene_range[1]),random.randint(-20,20))
-            elif random.random() < 0.01:
+                c.genome[i] = (random.sample([1,2,2,3,3,4,5,6,7,8,8,8,8,8,4,4,4,4,4,4],1)[0],random.randint(-20,20))
+            elif random.random() < 0.02:
                 # Permute just the operand
                 c.genome[i] = (c.genome[i][0],c.genome[i][1] + random.randint(-mutate_max,mutate_max))
         return c
@@ -118,12 +118,39 @@ class OperationOrganism:
                 index1 = operand % len(result)
                 index2 = (operand+1)%len(result)
                 result[index1],result[index2] = result[index2],result[index1]
-            elif operation == 7:
+            elif operation == 7 and len(result) > 0 and operand != 0:
                 # incorrect rotation
-                pass
-            elif operation == 8:
+                # Only rotate incorrect notes
+                notes_to_shift_positions = []
+                notes_to_shift = []
+                for i in range(len(result)):
+                    if i >= len(final_pattern) or final_pattern[i] != result[i]:
+                        # This note should be shifted
+                        notes_to_shift_positions.append(i)
+                        notes_to_shift.append(result[i])
+                # Now do the actual shifting of the notes
+                amount = (operand/abs(operand)) * (operand % len(notes_to_shift))
+                notes_to_shift = shift(notes_to_shift,amount)
+                for i in range(len(notes_to_shift)):
+                    result[notes_to_shift_positions[i]] = notes_to_shift[i]
+            elif operation == 8 and len(result) > 0:
                 # incorrect exchange
-                pass
+                # Only exchange incorrect notes
+                found = False
+                for i in range(len(result)):
+                    index1 = (operand+i) % len(result)
+                    if index1 >= len(final_pattern) or final_pattern[index1] != result[index1]:
+                        found = True
+                        break
+                if found:
+                    found = False
+                    for i in range(len(result)):
+                        index2 = (index1+i+1) % len(result)
+                        if index2 >= len(final_pattern) or final_pattern[index2] != result[index2]:
+                            found = True
+                            break
+                    if found:
+                        result[index1],result[index2] = result[index2],result[index1]
             if record_path:
                 path.append(result[:])
         if record_path:
@@ -139,6 +166,6 @@ class OperationOrganism:
             start = int(self.fitness_level/len(condense))*j
             stop = int(self.fitness_level/len(condense))*(j+1)
             for i in range(start,stop,condense[j]):
-                to_return += result_path[i]
+                to_return += result_path[i] + [(0,1,[])]
         #to_return += final_pattern
         return to_return

@@ -71,7 +71,8 @@ tomorrow           = [#(40,8,[]),(37,-8,[]),(38,16,[]),(40,4,[]), # The sun'll c
 
 
 
-p_melody = Population(400,None,(yesterday_combined,tomorrow),(2,6),1,organism_class=OperationOrganism)
+p_melody = Population(200,None,(yesterday_combined,tomorrow),(1,6),1,organism_class=OperationOrganism)
+p_melody2 = Population(200,None,(yesterday_combined,tomorrow),(1,6),1,organism_class=OperationOrganism)
 
 w = LilyWriter()
 #w.write(p_melody.best(1)[0].resolve(yesterday,tomorrow),"output/"+str(p_melody.number_of_generations)+".wav")
@@ -83,9 +84,10 @@ print tomorrow
 last_fit = 0.0
 last_gen = 0
 try:
-    while p_melody.most_fit() > 0.1:
-        print p_melody.most_fit(), "\t\t\t","".join(["|" for i in range(int(p_melody.most_fit()*100))])
+    while (p_melody.most_fit() + p_melody2.most_fit()) > 0.05:
+        print "GEN: ", p_melody.number_of_generations, "\t", "(%.5f,%.5f)" % (p_melody.most_fit(),p_melody2.most_fit()), "\t\t","".join(["|" for i in range(int((p_melody.most_fit() + p_melody2.most_fit())*100))])
         p_melody.generation()
+        p_melody2.generation()
         if not last_fit or last_fit - p_melody.most_fit() > 0.05 or p_melody.number_of_generations-last_gen > 100:
             last_fit = p_melody.most_fit()
             last_gen = p_melody.number_of_generations
@@ -93,12 +95,12 @@ try:
             #print tomorrow
             #print p_melody.summary(5)
             #w.write(p_melody.best(1)[0].resolve(yesterday,tomorrow),"output/"+str(p_melody.number_of_generations)+".wav")
-        elif p_melody.number_of_generations > 10000:
-            break
+        #elif p_melody.number_of_generations > 10000:
+        #    break
 except KeyboardInterrupt:
     print "STOPPED"
 print "OUT"
 print p_melody.best(1)[0].resolve(yesterday_combined,tomorrow),"gens:", p_melody.number_of_generations, "melody:",p_melody.most_fit(),"level:",p_melody.best(1)[0].fitness_level
 print tomorrow
 #w.write([p_melody.best(1)[0].resolve(yesterday_combined,tomorrow)],"output/"+str(p_melody.number_of_generations)+"_final")
-w.write([p_melody.best(1)[0].best_path(yesterday_combined,tomorrow,[1,5,10,10])],"output/"+str(p_melody.number_of_generations)+"_path")
+w.write([p_melody.best(1)[0].best_path(yesterday_combined,tomorrow,[1,5,10,10]),p_melody2.best(1)[0].best_path(yesterday_combined,tomorrow,[1,5,10,10])],"output/"+str(p_melody.number_of_generations)+"_path")
