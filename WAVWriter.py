@@ -83,6 +83,7 @@ class LilyWriter:
         created_on = datetime.datetime.today()
         staves = []
         instruments = ['piano','acoustic guitar (steel)']
+        lyrics_texts = []
         for i in range(len(melodies)):
             melody = melodies[i]
             instrument = instruments[i]
@@ -116,6 +117,12 @@ class LilyWriter:
             print "ABC to write:",abc_notation
             staff = Template(self.STAFF_TEMPLATE)
             staves.append(staff.substitute({'melody':" ".join(abc_notation),'instrument':instrument,'lyrics':" ".join(lyrics)}))
+            lyrics_texts.append(" ".join(lyrics))
+        # Print out lyrics
+        #for i in range(len(lyrics_texts)):
+        #    f = open(title + "_LYRICS_" + created_on.strftime('%m-%d-%H%M%S') + "_PART" + str(i) + ".txt","wb")
+        #    f.write(lyrics_texts[i])
+        #    f.close()
         # Print out combined and separate music
         if len(staves) > 1:
             for i in range(len(staves)):
