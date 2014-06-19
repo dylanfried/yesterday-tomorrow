@@ -63,6 +63,7 @@ class LilyWriter:
                 tempoWholesPerMinute = #(ly:make-moment 130 4)
             }
         }
+        \layout {}
     }
     """
     STAFF_TEMPLATE = """
@@ -116,19 +117,20 @@ class LilyWriter:
             staff = Template(self.STAFF_TEMPLATE)
             staves.append(staff.substitute({'melody':" ".join(abc_notation),'instrument':instrument,'lyrics':" ".join(lyrics)}))
         # Print out combined and separate music
-        for i in range(len(staves)):
-            # First
-            context = {}
-            context['title'] = title + " Part " + str(i)
-            context['created_on'] = created_on.strftime('%c')
-            context['staves'] = staves[i]
-            score = Template(self.TEMPLATE)
-            score = score.substitute(context)
-            f = open(title + "_" + created_on.strftime('%m-%d-%H%M%S') + "_PART" + str(i) + ".ly","wb")
-            f.write(score)
-            f.close()
-            print f.name
-            subprocess.call("lilypond " + f.name,shell=True)
+        if len(staves) > 1:
+            for i in range(len(staves)):
+                # First
+                context = {}
+                context['title'] = title + " Part " + str(i)
+                context['created_on'] = created_on.strftime('%c')
+                context['staves'] = staves[i]
+                score = Template(self.TEMPLATE)
+                score = score.substitute(context)
+                f = open(title + "_" + created_on.strftime('%m-%d-%H%M%S') + "_PART" + str(i) + ".ly","wb")
+                f.write(score)
+                f.close()
+                print f.name
+                subprocess.call("lilypond " + f.name,shell=True)
         # Combined
         context = {}
         context['title'] = title
