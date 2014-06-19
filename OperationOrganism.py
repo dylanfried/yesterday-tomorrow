@@ -8,7 +8,7 @@ class OperationOrganism:
         if genome:
             self.genome = genome[:]
         else:
-            self.genome = [(random.randint(1,5),random.randint(-20,20)) for i in range(self.length)]
+            self.genome = [(random.randint(2,6),random.randint(-20,20)) for i in range(self.length)]
     
     def random_genome(self,length):
         return
@@ -81,8 +81,7 @@ class OperationOrganism:
                 self.fitness_level = level
     
     def copy(self):
-        c = OperationOrganism()
-        c.genome = copy(self.genome)
+        c = OperationOrganism(genome=self.genome)
         return c
         
     def resolve(self,start_pattern,final_pattern,record_path=False):
@@ -114,9 +113,11 @@ class OperationOrganism:
                 # rotation
                 amount = (operand/abs(operand)) * (operand % len(result))
                 result = shift(result,amount)
-            elif operation == 6:
+            elif operation == 6 and len(result) > 0:
                 # exchange
-                pass
+                index1 = operand % len(result)
+                index2 = (operand+1)%len(result)
+                result[index1],result[index2] = result[index2],result[index1]
             elif operation == 7:
                 # incorrect rotation
                 pass
@@ -130,10 +131,14 @@ class OperationOrganism:
         else:
             return result
     
-    def best_path(self,start_pattern,final_pattern,condense=1):
+    def best_path(self,start_pattern,final_pattern,condense=[1]):
+        condense = [i for i in condense for j in range(i)]
         to_return = []
         result_path = self.resolve(start_pattern,final_pattern,record_path=True)
-        for i in range(0,self.fitness_level,condense):
-            to_return += result_path[i]
-        to_return += final_pattern
+        for j in range(len(condense)):
+            start = int(self.fitness_level/len(condense))*j
+            stop = int(self.fitness_level/len(condense))*(j+1)
+            for i in range(start,stop,condense[j]):
+                to_return += result_path[i]
+        #to_return += final_pattern
         return to_return

@@ -38,7 +38,7 @@ class Population:
             for i in range(0,len(sampled),2):
                 m1 = sampled[i].mutate(self.gene_range,self.mutate_max)
                 m2 = sampled[i+1].mutate(self.gene_range,self.mutate_max)
-                if random.random() > 0.95:
+                if random.random() > 0.7:
                     new_population += m1.crossover(m2)
                 else:
                     new_population.append(m1)

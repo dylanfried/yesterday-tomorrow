@@ -54,7 +54,7 @@ tomorrow           = [#(40,8,[]),(37,-8,[]),(38,16,[]),(40,4,[]), # The sun'll c
                       #(48,4,[]),(51,-2,[]), # lonely
                       #(0,8,[]),(43,8,[]),(44,8,[]),(44,4,[]),(49,8,[]),(50,4,[]), # I just stick out my
                       #(52,-2,[]),(48,4,[]),(52,-2,[]),(49,4,[]),(52,1,[]), # chin and grin and say
-                      (0,1,[]),(40,-4,[]),(38,8,[]), # Oh! The
+                      (0,2,[]),(40,-4,[]),(38,8,[]), # Oh! The
                       (37,-8,[]),(38,16,[]),(40,4,[]), # sun'll come
                       (45,-2,[]),(49,4,[]),(47,4,[]),(45,4,[]),  # out tomorrow
                       (49,-8,[]),(47,16,[]),(45,4,[]),(44,4,[]),(42,8,[]),(47,-4,[]), # So you got to hang on
@@ -71,7 +71,7 @@ tomorrow           = [#(40,8,[]),(37,-8,[]),(38,16,[]),(40,4,[]), # The sun'll c
 
 
 
-p_melody = Population(400,None,(yesterday_combined,tomorrow),(1,5),1,organism_class=OperationOrganism)
+p_melody = Population(400,None,(yesterday_combined,tomorrow),(2,6),1,organism_class=OperationOrganism)
 
 w = LilyWriter()
 #w.write(p_melody.best(1)[0].resolve(yesterday,tomorrow),"output/"+str(p_melody.number_of_generations)+".wav")
@@ -101,4 +101,4 @@ print "OUT"
 print p_melody.best(1)[0].resolve(yesterday_combined,tomorrow),"gens:", p_melody.number_of_generations, "melody:",p_melody.most_fit(),"level:",p_melody.best(1)[0].fitness_level
 print tomorrow
 #w.write([p_melody.best(1)[0].resolve(yesterday_combined,tomorrow)],"output/"+str(p_melody.number_of_generations)+"_final")
-w.write([p_melody.best(1)[0].best_path(yesterday_combined,tomorrow,5)],"output/"+str(p_melody.number_of_generations)+"_path")
+w.write([p_melody.best(1)[0].best_path(yesterday_combined,tomorrow,[1,5,10,10])],"output/"+str(p_melody.number_of_generations)+"_path")
