@@ -63,9 +63,9 @@ tomorrow           = [#(40,8,[]),(37,-8,[]),(38,16,[]),(40,4,[]), # The sun'll c
                       ] 
 
 w = LilyWriter()
-w.write([tomorrow],"output/tomorrow")
-w.write([yesterday_combined],"output/yesterday")
-exit(0)
+#w.write([tomorrow],"output/tomorrow")
+#w.write([yesterday_combined],"output/yesterday")
+#exit(0)
 yesterday_combined = [(tup[0]-4 if tup[0] != 0 else 0,tup[1],tup[2]) for tup in yesterday_combined]
 tomorrow = [(tup[0]-4 if tup[0] != 0 else 0,tup[1],tup[2]) for tup in tomorrow]
 

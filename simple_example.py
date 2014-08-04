@@ -121,8 +121,8 @@ w = LilyWriter()
 #yesterday_combined = helpers.assign_syllables(yesterday_combined,helpers.yesterday_lyrics)
 #tomorrow = helpers.assign_syllables(tomorrow,helpers.tomorrow_lyrics)
 
-p_melody = Population(3,yesterday_combined,tomorrow,(19,88),10)
-p_melody2 = Population(3,yesterday_combined,tomorrow,(19,88),10)
+p_melody = Population(100,yesterday_combined,tomorrow,(19,88),10)
+p_melody2 = Population(100,yesterday_combined,tomorrow,(19,88),10)
 
 path = []
 path += p_melody.best(1)[0].genome
