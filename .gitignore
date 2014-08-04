@@ -2,3 +2,6 @@
 *pyc
 *.midi
 *.pdf
+*.profile
+*.zip
+*.wav
