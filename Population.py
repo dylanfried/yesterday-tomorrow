@@ -18,7 +18,7 @@ class Population:
         self.organism_class = organism_class
         
         for i in range(self.number_of_organisms):
-            self.population.append(organism_class(start_melody,end_melody))
+            self.population.append(organism_class(start_melody,end_melody,self))
         
         self.calculate_fitness()
     
@@ -46,7 +46,7 @@ class Population:
             
             # Generate some random organisms
             for i in range(self.number_of_organisms - len(new_population)):
-                random_organism = self.organism_class(None,self.end_melody)
+                random_organism = self.organism_class(None,self.end_melody,self)
                 random_organism.random_genome(len(self.end_melody))
                 new_population.append(random_organism)
             

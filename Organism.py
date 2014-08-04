@@ -10,7 +10,8 @@ class Organism:
     fitness = None
     target = None
     
-    def __init__(self,genome=None,target_genome=None):
+    def __init__(self,genome=None,target_genome=None,population=None):
+        self.population = population
         if genome:
             self.genome = copy(genome)
         else:
@@ -18,19 +19,65 @@ class Organism:
         self.target = target_genome
     
     def random_genome(self,length):
+        self.genome = copy(self.population.start_melody)
+        return
         for i in range(length):
-            note = random.sample(get_weighted(i,length,[tup[0] for tup in self.target]),1)[0]
-            time = random.sample(get_weighted(i,length,[tup[1] for tup in self.target]),1)[0]
-            syllable = []
-            if note != 0:
-                syllable = random.sample(SYLLABLES,1)[0]
-            self.genome.append((note,time,syllable))
+            self.genome.append(self.population.start_melody[random.randint(0,len(self.population.start_melody)-1)])
     
     def mutate(self,gene_range,mutate_max):
         ''' Return a mutated organism '''
         c = self.copy()
+        # Add note?
+        attempts = 0
+        if self.population.number_of_generations > 10:
+            attempts = 1
+        if self.population.number_of_generations > 40:
+            attempts = 2
+        elif self.population.number_of_generations > 100:
+            attempts = 5
+        for attempt in range(attempts):
+            if random.random() < 0.005 or (self.population.number_of_generations >= 10 and random.random() < 0.02) or (self.population.number_of_generations >= 20 and random.random() < 0.1) or (self.population.number_of_generations >= 50 and random.random() < 0.25):
+                # How many to insert?
+                if self.population.number_of_generations > 20:
+                    insert = 3
+                elif self.population.number_of_generations > 10:
+                    insert = 2
+                else:
+                    insert = 1
+                #insert = random.randint(1,3)
+                target_index = random.randint(0,min(len(self.target)-insert,len(c.genome)))
+                for j in range(insert):
+                    c.genome.insert(target_index,(self.target[target_index][0],self.target[target_index][1],[]))
+                    target_index += 1
+        # Remove note?
+        if self.population.number_of_generations > 300:
+            remove = 5
+        elif self.population.number_of_generations > 100:
+            remove = 3
+        elif self.population.number_of_generations > 40:
+            remove = 2
+        elif self.population.number_of_generations > 20:
+            remove = 1
+        else:
+            remove = 0
+        for i in range(remove):
+            if (random.random() < 0.005 or (self.population.number_of_generations >= 20 and random.random() < 0.02) or (self.population.number_of_generations >= 40 and random.random() < 0.1) or (self.population.number_of_generations >= 100 and random.random() < 0.5)) and len(c.genome) > 0:
+                biggest_diff = 0
+                biggest_diff_position = None
+                for i in range(min(len(self.target),len(c.genome))):
+                    if abs(self.target[i][0] - c.genome[i][0]) > biggest_diff:
+                        biggest_diff = abs(self.target[i][0] - c.genome[i][0])
+                        biggest_diff_position = i
+                if biggest_diff_position is not None:
+                    c.genome.pop(biggest_diff_position)
+        
         i = 0
         while i < len(c.genome):
+            if (random.random() < 0.0005 or (self.population.number_of_generations >= 20 and random.random() < 0.01) or (self.population.number_of_generations >= 40 and random.random() < 0.05) or (self.population.number_of_generations >= 100 and random.random() < 0.1)) and len(c.genome) > 0 and i < len(self.target):
+                # Turn this one into the correct note
+                c.genome[i] = (self.target[i][0],self.target[i][1],self.target[i][2])
+                i += 1
+                continue
             try:
                 note = c.genome[i][0]
                 time = c.genome[i][1]
@@ -39,29 +86,30 @@ class Organism:
                 print "g",c.genome[i]
             syllable = c.genome[i][2]
             # Add note?
-            if random.random() < 0.02:
-                #print i,len(c.genome)
-                #print "old",[tup[0] for tup in self.target]
-                #print "new",[tup[0] for tup in self.target for j in range(int(5*(1-abs(i/float(len(c.genome))))))]
-                # How many to insert?
-                insert = random.randint(1,2)
-                target_index = random.randint(0,len(self.target)-insert)
-                for j in range(insert):
-                    c.genome.insert(i,(self.target[target_index][0],self.target[target_index][1],[]))
-                    target_index += 1
-                    i += 1
-                #c.genome.insert(i,(random.sample(get_weighted(i,len(c.genome),[tup[0] for tup in self.target]),1)[0],random.sample(get_weighted(i,len(c.genome),[tup[1] for tup in self.target]),1)[0],random.sample(SYLLABLES,1)[0]))
-                #i += 1
-                if i >= len(c.genome):
-                    break
-            # Remove note?
-            if random.random() < 0.02 and i > 0:
-                c.genome.pop(i-1)
-                i -= 1
-                if i >= len(c.genome):
-                    break
+            #if random.random() < 0.02:
+            #    #print i,len(c.genome)
+            #    #print "old",[tup[0] for tup in self.target]
+            #    #print "new",[tup[0] for tup in self.target for j in range(int(5*(1-abs(i/float(len(c.genome))))))]
+            #    # How many to insert?
+            #    insert = random.randint(1,2)
+            #    #target_index = random.randint(0,len(self.target)-insert)
+            #    target_index = i % (len(self.target)-1)
+            #    for j in range(insert):
+            #        c.genome.insert(i,(self.target[target_index][0],self.target[target_index][1],[]))
+            #        target_index += 1
+            #        i += 1
+            #    #c.genome.insert(i,(random.sample(get_weighted(i,len(c.genome),[tup[0] for tup in self.target]),1)[0],random.sample(get_weighted(i,len(c.genome),[tup[1] for tup in self.target]),1)[0],random.sample(SYLLABLES,1)[0]))
+            #    #i += 1
+            #    if i >= len(c.genome):
+            #        break
+            ## Remove note?
+            #if random.random() < 0.02 and i > 0:
+            #    c.genome.pop(i-1)
+            #    i -= 1
+            #    if i >= len(c.genome):
+            #        break
             # Note
-            if random.random() < 0.02:
+            if random.random() < 0.001:
                 if (note and random.random() < 0.85) or (not note and random.random() < 0.15):
                     if random.random() < 0.5 and len([tup[0] for tup in self.target if tup[0] >= note - mutate_max and tup[0] <= note + mutate_max]) > 0:
                         note = random.sample(get_weighted(i,len(c.genome),[tup[0] for tup in self.target if tup[0] >= note - mutate_max and tup[0] <= note + mutate_max]),1)[0]
@@ -74,7 +122,7 @@ class Organism:
                 else:
                     note = 0
             # time
-            if random.random() < 0.02:
+            if random.random() < 0.001:
                 if random.random() < 0.5:
                     time *= 2
                 else:
@@ -90,8 +138,8 @@ class Organism:
             # Syllable
             if note == 0:
                 syllable = []
-            elif random.random() < 0.1 or syllable == '':
-                syllable = random.sample(SYLLABLES,1)[0]
+            #elif random.random() < 0.1 or syllable == '':
+            #    syllable = random.sample(SYLLABLES,1)[0]
             c.genome[i] = (note,time,syllable)
             i += 1
         return c
@@ -226,10 +274,11 @@ class Organism:
         
         #print "TIMES",times
         
-        self.fitness = f
+        self.fitness = f/5.0
     
     def copy(self):
         c = Organism()
         c.genome = copy(self.genome)
         c.target = self.target
+        c.population = self.population
         return c

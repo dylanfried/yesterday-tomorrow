@@ -18,27 +18,21 @@ yesterday_combined = [(47, 8, ['Yes']), (45, 8, ['ter']), (45, -2, ['day']), (0,
                       (49, 8, ['all']), (51, 8, ['my']), (53, 8, ['trou']), (54, 8, ['bles']), (56, 8, ['seemed']), (57, 8, ['so']), (56, -8, ['far']), (54, 16, ['a']), (54, -2, ['way']), # All my troubles seemed so far away
                       (0, 4, []), (54, 8, ['now']), (54, 8, ['it']), (52, 8, ['looks']), (50, 8, ['as']), (49, 8, ['though']), (47, 8, ["they're"]), (50, 4, ['here']), (49, 8, ['to']), (49, -4, ['stay']), # Now it looks as though they're here to stay
                       (47, 4, ['oh']),(45, 4, ['I']),(49, 8, ['be']),(47, 2, ['lieve']),(42, 8, ['in']),(45, -4, ['yes']),(49, 8, ['ter']),(49, -2, ['day']), # Oh I believe in (too much pause) yesterday
-                      # Adding bridge between verses (even though it doesn't really go here)
-                      (49,2,['Why']),(49,2,['she']),(54,4,['had']),(56,4,['to']),(57,4,['go']), # Why she had to go
-                      (56,8,['I']),(54,8,["don't"]),(56,-4,['know']),(54,8,['she']),(52,4,['would']),(54,4,["n't"]),(49,1,['say']), # I don't know she wouldn't say
-                      (49,2,['I']),(49,2,['said']),(54,4,['some']),(56,4,['thing']),(57,4,['wrong']), # I said something wrong
-                      (56,8,['Now']),(54,8,['I']),(56,-4,['long']), # Now I long
-                      (54,8,['For']),(52,4,['yes']),(56,4,['ter']),(57,4,['day']),(52,4,['ay']),(50,4,['ay']),(49,4,['ay']), # For yesterday -eh -eh -eh
-                      ]
-                      #(47, 8, []),(45, 8, []),(45, -2, []), # Suddenly
-                      #(0, 4, []),(49, 8, []), (51, 8, []), (53, 8, []), (54, 8, []), (56, 8, []), (57, 8, []), (56, -8, []), (54, 16, []), (54, -2, []), # I'm not half the man I used to be
-                      #(0,4,[]),(54, 8, []), (54, 8, []), (52, 8, []), (50, 8, []), (49, 8, []), (47, 8, []), (50, 4, []), (49, 8, []), (49, -4, []), # There's a shadow hanging over me
-                      #(47, 4, []),(45, 4, []),(49, 8, []),(47, 2, []),(42, 8, []),(45, -4, []),(49, 8, []),(49, -2, []), #Oh yesterday came (too much pause) suddenly
-                      #(49,2,[]),(49,2,[]),(54,4,[]),(56,4,[]),(57,4,[]), # Why she had to go
-                      #(56,8,[]),(54,8,[]),(56,-4,[]),(54,8,[]),(52,4,[]),(54,4,[]),(49,1,[]), # I don't know she wouldn't say
-                      #(49,2,[]),(49,2,[]),(54,4,[]),(56,4,[]),(57,4,[]), # I said something wrong
-                      #(56,8,[]),(54,8,[]),(56,-4,[]), # Now I long
-                      #(54,8,[]),(52,4,[]),(56,4,[]),(57,4,[]),(52,4,[]),(50,4,[]),(49,4,[]), # For yesterday -eh -eh -eh
+                      (47, 8, []),(45, 8, []),(45, -2, []), # Suddenly
+                      (0, 4, []),(49, 8, []), (51, 8, []), (53, 8, []), (54, 8, []), (56, 8, []), (57, 8, []), (56, -8, []), (54, 16, []), (54, -2, []), # I'm not half the man I used to be
+                      (0,4,[]),(54, 8, []), (54, 8, []), (52, 8, []), (50, 8, []), (49, 8, []), (47, 8, []), (50, 4, []), (49, 8, []), (49, -4, []), # There's a shadow hanging over me
+                      (47, 4, []),(45, 4, []),(49, 8, []),(47, 2, []),(42, 8, []),(45, -4, []),(49, 8, []),(49, -2, []), #Oh yesterday came (too much pause) suddenly
+                      (49,2,[]),(49,2,[]),(54,4,[]),(56,4,[]),(57,4,[]), # Why she had to go
+                      (56,8,[]),(54,8,[]),(56,-4,[]),(54,8,[]),(52,4,[]),(54,4,[]),(49,1,[]), # I don't know she wouldn't say
+                      (49,2,[]),(49,2,[]),(54,4,[]),(56,4,[]),(57,4,[]), # I said something wrong
+                      (56,8,[]),(54,8,[]),(56,-4,[]), # Now I long
+                      (54,8,[]),(52,4,[]),(56,4,[]),(57,4,[]),(52,4,[]),(50,4,[]),(49,4,[]), # For yesterday -eh -eh -eh
                       #(47, 8, []), (45, 8, []), (45, -2, []), (0, 4, []), # Yesterday
                       #(49, 8, []), (51, 8, []), (53, 8, []), (54, 8, []), (56, 8, []), (57, 8, []), (56, -8, []), (54, 16, []), (54, -2, []), # All my troubles seemed so far away
                       #(0, 4, []), (54, 8, []), (54, 8, []), (52, 8, []), (50, 8, []), (49, 8, []), (47, 8, []), (50, 4, []), (49, 8, []), (49, -4, []), # Now it looks as though they're here to stay
                       #(47, 4, []),(45, 4, []),(49, 8, []),(47, 2, []),(42, 8, []),(45, -4, []),(49, 8, []),(49, -2, []), # Oh I believe in yesterday
-                      #(45,4,[]),(49,4,[]),(47,4,[]),(42,4,[]),(45,4,()),(49,8,[]),(49,-2,[])] # Mmmm, mmm, mmm, mmm, mmm, mm-mm
+                      #(45,4,[]),(49,4,[]),(47,4,[]),(42,4,[]),(45,4,()),(49,8,[]),(49,-2,[]) # Mmmm, mmm, mmm, mmm, mmm, mm-mm
+                      ]
 tomorrow           = [#(40,8,[]),(37,-8,[]),(38,16,[]),(40,4,[]), # The sun'll come
                       #(45,-2,[]),(49,4,[]),(47,4,[]),(45,4,[]),  # out tomorrow
                       #(49,-8,[]),(47,16,[]),(45,4,[]),(44,4,[]),(42,8,[]),(47,-4,[]), # Bet your bottom dollar
@@ -68,7 +62,12 @@ tomorrow           = [#(40,8,[]),(37,-8,[]),(38,16,[]),(40,4,[]), # The sun'll c
                       (45,4,['a']), (40,2,['day']), (47,2,['a']), (45,1,['way']) # a day away
                       ] 
 
-
+w = LilyWriter()
+w.write([tomorrow],"output/tomorrow")
+w.write([yesterday_combined],"output/yesterday")
+exit(0)
+yesterday_combined = [(tup[0]-4 if tup[0] != 0 else 0,tup[1],tup[2]) for tup in yesterday_combined]
+tomorrow = [(tup[0]-4 if tup[0] != 0 else 0,tup[1],tup[2]) for tup in tomorrow]
 
 
 p_melody = Population(200,None,(yesterday_combined,tomorrow),(1,6),1,organism_class=OperationOrganism)

@@ -4,7 +4,8 @@ from helpers import shift
 
 class OperationOrganism:
     length = 150
-    def __init__(self,genome=None,target=None):
+    def __init__(self,genome=None,target=None,population=None):
+        self.population = population
         if genome:
             self.genome = genome[:]
         else:
