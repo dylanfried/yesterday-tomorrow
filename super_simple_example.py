@@ -156,6 +156,6 @@ except KeyboardInterrupt:
 #lyrics1 = generate_lyrics(path1)
 #lyrics2 = generate_lyrics(path2)
 
-w.write([best1,best2,best3],"output/simple_final")
-w.write([path,path2,path3],"output/simple_path")
+w.write([best1,best2,best3],"output/super_simple_final")
+w.write([path,path2,path3],"output/super_simple_path")
 #w.write([path],"output/simple_path")
